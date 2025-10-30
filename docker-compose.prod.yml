@@ -1,0 +1,96 @@
+# Docker Compose 生产环境配置
+# 使用方法: docker compose -f docker-compose.prod.yml up -d
+
+services:
+  jimeng-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: jimeng-api:latest
+    container_name: jimeng-api
+
+    # 重启策略
+    restart: unless-stopped
+
+    # 端口映射（仅本地，通过 Nginx 反向代理访问）
+    ports:
+      - "127.0.0.1:5100:5100"  # 仅监听本地，不对外暴露
+
+    # 环境变量（可选，从 .env 文件加载）
+    # environment:
+    #   - NODE_ENV=production
+    #   - PORT=5100
+    #   - HOST=0.0.0.0
+
+    # 或使用 env_file
+    # env_file:
+    #   - .env
+
+    # 卷挂载（可选，用于持久化日志和临时文件）
+    volumes:
+      # 日志持久化
+      - jimeng-logs:/app/logs
+      # 临时文件
+      - jimeng-tmp:/app/tmp
+      # 如需修改配置，可挂载配置目录（注意：会覆盖镜像内的配置）
+      # - ./configs:/app/configs:ro
+
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:5100/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    # 资源限制
+    deploy:
+      resources:
+        limits:
+          cpus: '2'           # 最多使用 2 个 CPU 核心
+          memory: 2G          # 最多使用 2GB 内存
+        reservations:
+          cpus: '0.5'         # 保留 0.5 个 CPU 核心
+          memory: 512M        # 保留 512MB 内存
+
+    # 日志配置
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"       # 单个日志文件最大 50MB
+        max-file: "5"         # 保留最近 5 个日志文件
+        compress: "true"      # 压缩旧日志
+
+    # 网络配置
+    networks:
+      - jimeng-network
+
+    # 容器标签
+    labels:
+      - "com.jimeng.service=api"
+      - "com.jimeng.version=1.3.0"
+      - "com.jimeng.description=Jimeng AI Image and Video Generation API"
+
+# 卷定义（持久化存储）
+volumes:
+  jimeng-logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/jimeng-api/logs
+
+  jimeng-tmp:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/jimeng-api/tmp
+
+# 网络定义
+networks:
+  jimeng-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
