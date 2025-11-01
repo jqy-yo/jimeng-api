@@ -12,3 +12,5 @@ logFileExpires: 2626560000
 publicDir: ./public
 # 临时文件有效期（毫秒）
 tmpFileExpires: 86400000
+# 日志级别
+log_level: info

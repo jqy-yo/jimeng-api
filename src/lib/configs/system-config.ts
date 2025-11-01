@@ -31,9 +31,11 @@ export class SystemConfig {
     requestBody: any;
     /** 是否调试模式 */
     debug: boolean;
+    /** 日志级别 */
+    log_level: string;
 
     constructor(options?: any) {
-        const { requestLog, tmpDir, logDir, logWriteInterval, logFileExpires, publicDir, tmpFileExpires, requestBody, debug } = options || {};
+        const { requestLog, tmpDir, logDir, logWriteInterval, logFileExpires, publicDir, tmpFileExpires, requestBody, debug, log_level } = options || {};
         this.requestLog = _.defaultTo(requestLog, false);
         this.tmpDir = _.defaultTo(tmpDir, './tmp');
         this.logDir = _.defaultTo(logDir, './logs');
@@ -55,6 +57,7 @@ export class SystemConfig {
             parsedMethods: ['POST', 'PUT', 'PATCH']
         });
         this.debug = _.defaultTo(debug, true);
+        this.log_level = _.defaultTo(log_level, 'info');
     }
 
     get rootDirPath() {

@@ -147,8 +147,13 @@ class Server {
                 for (let uri in route[method]) {
                     this.router[method](`${prefix}${uri}`, async ctx => {
                         const { request, response } = await this.#requestProcessing(ctx, route[method][uri]);
-                        if(response != null && config.system.requestLog)
-                            logger.info(`<- ${request.method} ${request.url} ${response.time - request.time}ms`);
+                        if(response != null && config.system.requestLog) {
+                            if (ctx.request.url.endsWith('/ping')) {
+                                logger.debug(`<- ${request.method} ${request.url} ${response.time - request.time}ms`);
+                            } else {
+                                logger.info(`<- ${request.method} ${request.url} ${response.time - request.time}ms`);
+                            }
+                        }
                     });
                 }
             }

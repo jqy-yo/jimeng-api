@@ -1,73 +1,72 @@
 # Jimeng API
 
-🎨 **免费的AI图像和视频生成API服务** - 基于即梦AI（国内站）和dreamina（国际站）的逆向工程实现，提供与OpenAI API兼容的接口格式
+[中文文档](README.CN.md)
 
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/) [![Docker](https://img.shields.io/badge/Docker-支持-blue.svg)](https://www.docker.com/) [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
+🎨 **Free AI Image and Video Generation API Service** - Based on reverse engineering of Jimeng AI (China site) and Dreamina (international site), providing an interface format compatible with the OpenAI API.
 
-## ✨ 特性
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/) [![Docker](https://img.shields.io/badge/Docker-Supported-blue.svg)](https://www.docker.com/) [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 
-- 🎨 **AI图像生成**: 支持多种模型和分辨率（默认2K，支持4K，1K）
-- 🖼️ **图生图合成**: 支持本地图片或者图片URL
-- 🎬 **AI视频生成**: 支持文本到视频生成，增加国内站图生视频的本地图片上传功能
-- 🌐 **国际站支持**: 新增对即梦国际站（dreamina）文生图以及图生图API的支持，有问题提issue
-- 💬 **聊天接口**: OpenAI生图格式兼容的API
-- 🔄 **智能轮询**: 自适应轮询机制，优化生成效率
-- 🛡️ **统一异常处理**: 完善的错误处理和重试机制
-- 📊 **详细日志**: 结构化日志记录，便于调试
-- 🐳 **Docker支持**: 容器化部署，开箱即用
+## ✨ Features
 
-## ⚠ 风险警告
+- 🎨 **AI Image Generation**: Supports multiple models and resolutions (default 2K, supports 4K, 1K).
+- 🖼️ **Image-to-Image Synthesis**: Supports local images or image URLs.
+- 🎬 **AI Video Generation**: Supports text-to-video generation, and adds local image upload for image-to-video on the China site.
+- 🌐 **International Site Support**: Added support for text-to-image and image-to-image APIs for the Dreamina international site. Please file an issue if you encounter problems.
+- 💬 **Chat Interface**: OpenAI-compatible API for image generation.
+- 🔄 **Smart Polling**: Adaptive polling mechanism to optimize generation efficiency.
+- 🛡️ **Unified Exception Handling**: Comprehensive error handling and retry mechanism.
+- 📊 **Detailed Logs**: Structured logging for easy debugging.
+- 🐳 **Docker Support**: Containerized deployment, ready to use out of the box.
+- ⚙️ **Log Level Control**: Dynamically adjust log output level through configuration files.
 
-- 此项目属于研究交流学习性质，不接受任何资金捐助和金钱交易！
-- 仅限自用和个人研究，避免对官方造成服务压力，否则轻者可能封号，重者可能触犯法律！
-- 仅限自用和个人研究，避免对官方造成服务压力，否则轻者可能封号，重者可能触犯法律！
-- 仅限自用和个人研究，避免对官方造成服务压力，否则轻者可能封号，重者可能触犯法律！
+## ⚠ Risk Warning
 
-## ✨ 新功能亮点
+- This project is for research and educational purposes only. It does not accept any financial donations or transactions!
+- For personal use and research only. Avoid putting pressure on the official servers. Violators may have their accounts banned or, in serious cases, break the law!
+- For personal use and research only. Avoid putting pressure on the official servers. Violators may have their accounts banned or, in serious cases, break the law!
+- For personal use and research only. Avoid putting pressure on the official servers. Violators may have their accounts banned or, in serious cases, break the law!
 
-### 📐 ratio和resolution参数支持
+## ✨ New Feature Highlights
 
-现在通过`ratio`和`resolution`两个参数来共同控制图像尺寸，这提供了更高的灵活性。程序内`resolution`默认设置为`2k`。
+### 📐 `ratio` and `resolution` Parameter Support
+
+Image dimensions are now controlled by the `ratio` and `resolution` parameters, providing greater flexibility. The default `resolution` is set to `2k`.
 
 ```bash
 curl -X POST http://localhost:5100/v1/images/generations \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_SESSION_ID" \
-  -d '{
-    "model": "jimeng-4.0",
-    "prompt": "美丽的少女，胶片感",
-    "ratio": "4:3",
-    "resolution": "2k"
-  }'
+  -d \
+    "{\"model\": \"jimeng-4.0\", \"prompt\": \"A beautiful girl, film-like feel\", \"ratio\": \"4:3\", \"resolution\": \"2k\"}"
 ```
 
-**支持的resolution**: `1k`, `2k`, `4k`
+**Supported resolutions**: `1k`, `2k`, `4k`
 
-**支持的ratio**: `1:1`, `4:3`, `3:4`, `16:9`, `9:16`, `3:2`, `2:3`, `21:9`
+**Supported ratios**: `1:1`, `4:3`, `3:4`, `16:9`, `9:16`, `3:2`, `2:3`, `21:9`
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### sessionid获取
-- 国内站 (即梦)和国际站 (dreamina)获取sessionid的方法相同，见下图。
-> **注意1**: 国内站和国际站api接口相同，但国际站的sessionid需要手动添加**us-**，比如`Bearer us-xxxxx`，才能访问国际站，否则默认国内站。
->
-> **注意2**: 国内站和国际站现已同时支持*文生图*和*图生图*，国际站添加nanobanana模型。
->
-> **注意3**: 国际站使用nanobanana模型时，生成的图像都将固定为 **1024x1024** 和 **2k**，与官方保持一致。
+### Getting `sessionid`
+- The method for obtaining the `sessionid` is the same for both the domestic site (Jimeng) and the international site (Dreamina), as shown in the image below.
+> **Note 1**: The API endpoints are the same for both domestic and international sites, but for the international site's `sessionid`, you need to manually add the prefix **us-**, for example, `Bearer us-xxxxx`, to access the international site. Otherwise, it defaults to the domestic site.
+> 
+> **Note 2**: Both domestic and international sites now support *text-to-image* and *image-to-image*. The nanobanana model has been added for the international site.
+> 
+> **Note 3**: When using the nanobanana model on the international site, the generated images will be fixed at **1024x1024** and **2k**, consistent with the official settings.
 
 ![](https://github.com/iptag/jimeng-api/blob/main/get_sessionid.png)
 
-### 环境要求
+### Environment Requirements
 
 - Node.js 18+
-- npm 或 yarn
-- Docker (可选)
+- npm or yarn
+- Docker (optional)
 
-### 安装部署
+### Installation and Deployment
 
-#### 方式一：docker镜像拉取和更新
+#### Method 1: Docker Image Pull and Update (Recommended)
 
-**拉取命令**
+**Pull command**
 ```bash
 docker run -d \
   --name jimeng-api \
@@ -76,7 +75,7 @@ docker run -d \
   ghcr.io/iptag/jimeng-api:latest
 ```
 
-**更新命令**
+**Update command**
 ```bash
 docker run --rm \
   -v /var/run/docker.sock:/var/run/docker.sock \
@@ -84,31 +83,31 @@ docker run --rm \
   --run-once jimeng-api
 ```
 
-#### 方式二：直接运行
+#### Method 2: Direct Run
 
 ```bash
-# 克隆项目
+# Clone the project
 git clone <repository-url>
 cd jimeng-api
 
-# 安装依赖
+# Install dependencies
 npm install
 
-# 编译文件
+# Build files
 npm run build
 
-# 启动服务
+# Start the service
 npm run dev
 ```
 
-#### 方式三：Docker部署（推荐）
+#### Method 3: Docker Deployment
 
-##### 🚀 快速启动
+##### 🚀 Quick Start
 ```bash
-# 使用docker-compose（推荐）
+# Using docker-compose (recommended)
 docker-compose up -d
 
-# 或者手动构建和运行
+# Or build and run manually
 docker build -t jimeng-api .
 
 docker run -d \
@@ -118,29 +117,29 @@ docker run -d \
   jimeng-api
 ```
 
-##### 🔧 常用命令
+##### 🔧 Common Commands
 ```bash
-# 重新构建并启动
+# Rebuild and start
 docker-compose up -d --build
 
-# 查看服务日志
+# View service logs
 docker logs jimeng-api
 
-# 停止服务
+# Stop service
 docker-compose down
 
-# 进入容器调试
+# Enter container for debugging
 docker exec -it jimeng-api sh
 ```
 
-##### 📊 Docker镜像特性
-- ✅ **多阶段构建**：优化镜像大小（167MB）
-- ✅ **非root用户**：增强安全性（jimeng用户）
-- ✅ **健康检查**：自动监控服务状态
-- ✅ **统一端口**：容器内外均使用5100端口
-- ✅ **日志管理**：结构化日志输出
+##### 📊 Docker Image Features
+- ✅ **Multi-stage build**: Optimized image size (170MB)
+- ✅ **Non-root user**: Enhanced security (jimeng user)
+- ✅ **Health check**: Automatic service status monitoring
+- ✅ **Unified port**: Uses port 5100 both inside and outside the container
+- ✅ **Log management**: Structured log output
 
-### 配置说明
+### Configuration Description
 
 #### `configs/dev/service.yml`
 ```yaml
@@ -153,56 +152,50 @@ port: 5100
 ```yaml
 requestLog: true
 debug: false
+log_level: info # Log levels: error, warning, info (default), debug
 ```
 
-## 📖 API文档
+## 📖 API Documentation
 
-### 文生图
+### Text-to-Image
 
 **POST** `/v1/images/generations`
 
-**请求参数**:
-- `model` (string): 使用的模型名称
-- `prompt` (string): 图像描述文本
-- `ratio` (string, 可选): 图像比例，默认为 `"1:1"`。支持的比例: `1:1`, `4:3`, `3:4`, `16:9`, `9:16`, `3:2`, `2:3`, `21:9`。
-- `resolution` (string, 可选): 分辨率级别，默认为 `"2k"`。支持的分辨率: `1k`, `2k`, `4k`。
-- `negative_prompt` (string, 可选): 负面提示词
-- `sample_strength` (number, 可选): 采样强度 (0.0-1.0)
-- `response_format` (string, 可选): 响应格式 ("url" 或 "b64_json")
+**Request Parameters**:
+- `model` (string): The name of the model to use.
+- `prompt` (string): The text description of the image.
+- `ratio` (string, optional): The aspect ratio of the image, defaults to `"1:1"`. Supported ratios: `1:1`, `4:3`, `3:4`, `16:9`, `9:16`, `3:2`, `2:3`, `21:9`.
+- `resolution` (string, optional): The resolution level, defaults to `"2k"`. Supported resolutions: `1k`, `2k`, `4k`.
+- `negative_prompt` (string, optional): Negative prompt words.
+- `sample_strength` (number, optional): Sampling strength (0.0-1.0).
+- `response_format` (string, optional): Response format ("url" or "b64_json").
 
 ```bash
-# 默认参数（ratio: "1:1", resolution: "2k"）
+# Default parameters (ratio: "1:1", resolution: "2k")
 curl -X POST http://localhost:5100/v1/images/generations \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_SESSION_ID" \
-  -d '{
-    "model": "jimeng-4.0",
-    "prompt": "一只可爱的小猫咪"
-  }'
+  -d \
+    "{\"model\": \"jimeng-4.0\", \"prompt\": \"A cute little cat\"}"
 
-# 使用4K分辨率的示例
+# Example using 4K resolution
 curl -X POST http://localhost:5100/v1/images/generations \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_SESSION_ID" \
-  -d '{
-    "model": "jimeng-4.0",
-    "prompt": "壮丽的山水风景，超高分辨率",
-    "ratio": "16:9",
-    "resolution": "4k"
-  }'
+  -d \
+    "{\"model\": \"jimeng-4.0\", \"prompt\": \"Magnificent landscape, ultra-high resolution\", \"ratio\": \"16:9\", \"resolution\": \"4k\"}"
 ```
 
-**支持的模型**:
-- `nanobanana`: 仅国际站支持
-- `jimeng-4.0`: 国内、国际站均支持
-- `jimeng-3.1`: 仅国内站支持
-- `jimeng-3.0`: 国内、国际站均支持
-- `jimeng-2.1`: 仅国内站支持
+**Supported Models**:
+- `nanobanana`: Only supported on the international site.
+- `jimeng-4.0`: Supported on both domestic and international sites.
+- `jimeng-3.1`: Only supported on the domestic site.
+- `jimeng-3.0`: Supported on both domestic and international sites.
+- `jimeng-2.1`: Only supported on the domestic site.
 - `jimeng-xl-pro`
 
-
-**支持的比例及对应分辨率** ：
-| resolution | ratio | 分辨率 |
+**Supported Ratios and Corresponding Resolutions**:
+| resolution | ratio | Resolution |
 |---|---|---|
 | `1k` | `1:1` | 1328×1328 |
 | | `4:3` | 1472×1104 |
@@ -212,7 +205,7 @@ curl -X POST http://localhost:5100/v1/images/generations \
 | | `3:2` | 1584×1056 |
 | | `2:3` | 1056×1584 |
 | | `21:9` | 2016×864 |
-| `2k` (默认) | `1:1` | 2048×2048 |
+| `2k` (default) | `1:1` | 2048×2048 |
 | | `4:3` | 2304×1728 |
 | | `3:4` | 1728×2304 |
 | | `16:9` | 2560×1440 |
@@ -229,15 +222,15 @@ curl -X POST http://localhost:5100/v1/images/generations \
 | | `2:3` | 3328×4992 |
 | | `21:9` | 6048×2592 |
 
-### 图生图
+### Image-to-Image
 
 **POST** `/v1/images/compositions`
 
-**功能说明**: 基于输入的一张或多张图片，结合文本提示词生成新的图片。支持图片混合、风格转换、内容合成等多种创作模式。
+**Function Description**: Generate a new image based on one or more input images, combined with a text prompt. Supports various creative modes like image blending, style transfer, and content synthesis.
 
 ```bash
-# 国际版图生图示例 (本地文件上传)
-# 注意下面的 "us-your_international_token"
+# International version image-to-image example (local file upload)
+# Note "us-your_international_token" below
 curl -X POST http://localhost:5100/v1/images/compositions \
   -H "Authorization: Bearer us-YOUR_SESSION_ID" \
   -F "prompt=A cute cat, anime style" \
@@ -245,57 +238,51 @@ curl -X POST http://localhost:5100/v1/images/compositions \
   -F "images=@/path/to/your/local/cat.jpg"
 ```
 
-**请求参数**:
-- `model` (string): 使用的模型名称
-- `prompt` (string): 图像描述文本，用于指导生成方向
-- `images` (array): 输入图片数组
-- `ratio` (string, 可选): 图像比例，默认为 `"1:1"`。支持的比例: `1:1`, `4:3`, `3:4`, `16:9`, `9:16`, `3:2`, `2:3`, `21:9`。
-- `resolution` (string, 可选): 分辨率级别，默认为 `"2k"`。支持的分辨率: `1k`, `2k`, `4k`。
-- `negative_prompt` (string, 可选): 负面提示词
-- `sample_strength` (number, 可选): 采样强度 (0.0-1.0)
-- `response_format` (string, 可选): 响应格式 ("url" 或 "b64_json")
+**Request Parameters**:
+- `model` (string): The name of the model to use.
+- `prompt` (string): Text description of the image to guide the generation.
+- `images` (array): An array of input images.
+- `ratio` (string, optional): The aspect ratio of the image, defaults to `"1:1"`. Supported ratios: `1:1`, `4:3`, `3:4`, `16:9`, `9:16`, `3:2`, `2:3`, `21:9`.
+- `resolution` (string, optional): The resolution level, defaults to `"2k"`. Supported resolutions: `1k`, `2k`, `4k`.
+- `negative_prompt` (string, optional): Negative prompt words.
+- `sample_strength` (number, optional): Sampling strength (0.0-1.0).
+- `response_format` (string, optional): Response format ("url" or "b64_json").
 
-**使用限制**:
-- 输入图片数量: 1-10张
-- 支持的图片格式: JPG, PNG, WebP等常见格式
-- 图片大小限制: 建议单张图片不超过10MB
-- 生成时间: 通常30秒-5分钟，复杂合成可能需要更长时间
+**Usage Restrictions**:
+- Number of input images: 1-10
+- Supported image formats: Common formats like JPG, PNG, WebP, etc.
+- Image size limit: Recommended not to exceed 10MB per image.
+- Generation time: Usually 30 seconds to 5 minutes, complex compositions may take longer.
 
-**使用示例**:
+**Usage Examples**:
 
 ```bash
-# 示例1: URL图片风格转换 (使用application/json)
+# Example 1: URL image style transfer (using application/json)
 curl -X POST http://localhost:5100/v1/images/compositions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_SESSION_ID" \
-  -d '{
-    "model": "jimeng-4.0",
-    "prompt": "将这张照片转换为油画风格，色彩鲜艳，笔触明显",
-    "images": ["https://example.com/photo.jpg"],
-    "ratio": "1:1",
-    "resolution": "2k",
-    "sample_strength": 0.7
-  }'
+  -d \
+    "{\"model\": \"jimeng-4.0\", \"prompt\": \"Convert this photo into an oil painting style, with vibrant colors and distinct brushstrokes\", \"images\": [\"https://example.com/photo.jpg\"], \"ratio\": \"1:1\", \"resolution\": \"2k\", \"sample_strength\": 0.7}"
 
-# 示例2: 本地单文件上传 (使用multipart/form-data)
+# Example 2: Local single file upload (using multipart/form-data)
 curl -X POST http://localhost:5100/v1/images/compositions \
   -H "Authorization: Bearer YOUR_SESSION_ID" \
-  -F "prompt=一只可爱的猫，动漫风格" \
+  -F "prompt=A cute cat, anime style" \
   -F "model=jimeng-4.0" \
   -F "ratio=1:1" \
   -F "resolution=1k" \
   -F "images=@/path/to/your/local/cat.jpg"
 
-# 示例3: 本地多文件上传 (使用multipart/form-data)
+# Example 3: Local multiple file upload (using multipart/form-data)
 curl -X POST http://localhost:5100/v1/images/compositions \
   -H "Authorization: Bearer YOUR_SESSION_ID" \
-  -F "prompt=融合这两张图片" \
+  -F "prompt=Merge these two images" \
   -F "model=jimeng-4.0" \
   -F "images=@/path/to/your/image1.jpg" \
   -F "images=@/path/to/your/image2.png"
 ```
 
-**成功响应示例** (适用于以上所有示例):
+**Successful Response Example** (applies to all examples above):
 ```json
 {
   "created": 1703123456,
@@ -309,86 +296,81 @@ curl -X POST http://localhost:5100/v1/images/compositions \
 }
 ```
 
-#### ❓ **常见问题与解决方案**
+#### ❓ **FAQ & Solutions**
 
-**Q: 图片上传失败怎么办？**
-A: 检查图片URL是否可访问，确保图片格式正确，文件大小不超过10MB。
+**Q: What to do if image upload fails?**
+A: Check if the image URL is accessible, ensure the image format is correct, and the file size does not exceed 10MB.
 
-**Q: 生成时间过长怎么办？**
-A: 复杂的多图合成需要更长时间，建议耐心等待。如果超过10分钟仍未完成，可以重新提交请求。
+**Q: What to do if generation takes too long?**
+A: Complex multi-image compositions take longer. Please be patient. If it's not completed after 10 minutes, you can resubmit the request.
 
-**Q: 如何提高合成质量？**
+**Q: How to improve composition quality?**
 A:
-- 使用高质量的输入图片
-- 编写详细准确的提示词
-- 适当调整 `sample_strength` 参数
-- 避免使用过多冲突的图片风格
+- Use high-quality input images.
+- Write detailed and accurate prompts.
+- Adjust the `sample_strength` parameter appropriately.
+- Avoid using too many conflicting image styles.
 
-**Q: 支持哪些图片格式？**
-A: 支持 JPG、PNG、WebP、GIF 等常见格式，推荐使用 JPG 或 PNG。
+**Q: What image formats are supported?**
+A: Common formats like JPG, PNG, WebP, GIF are supported. JPG or PNG are recommended.
 
-**Q: 可以使用本地图片吗？**
-A: 可以。现在支持直接上传本地文件。请参考上方的“本地文件上传示例”。您也可以继续使用原有的网络图片URL方式。
+**Q: Can I use local images?**
+A: Yes. Direct upload of local files is now supported. Please refer to the "Local file upload example" above. You can also continue to use the network image URL method.
 
-### 视频生成
+### Video Generation
 
 **POST** `/v1/videos/generations`
 
-**功能说明**: 基于文本提示词（Text-to-Video），或结合输入的首/尾帧图片（Image-to-Video）生成一段视频。
+**Function Description**: Generate a video based on a text prompt (Text-to-Video), or combined with input start/end frame images (Image-to-Video).
 
-**请求参数**:
-- `model` (string): 使用的视频模型名称。
-- `prompt` (string): 视频内容的文本描述。
-- `width` (number, 可选): 视频宽度，默认为 `1024`。
-- `height` (number, 可选): 视频高度，默认为 `1024`。
-- `resolution` (string, 可选): 视频分辨率，例如 `720p`。
-- `file_paths` (array, 可选): 一个包含图片URL的数组，用于指定视频的**首帧**（数组第1个元素）和**尾帧**（数组第2个元素）。
-- `[file]` (file, 可选): 通过 `multipart/form-data` 方式上传的本地图片文件（最多2个），用于指定视频的**首帧**和**尾帧**。字段名可以任意，例如 `image1`。
-- `response_format` (string, 可选): 响应格式，支持 `url` (默认) 或 `b64_json`。
+**Request Parameters**:
+- `model` (string): The name of the video model to use.
+- `prompt` (string): The text description of the video content.
+- `width` (number, optional): Video width, defaults to `1024`.
+- `height` (number, optional): Video height, defaults to `1024`.
+- `resolution` (string, optional): Video resolution, e.g., `720p`.
+- `file_paths` (array, optional): An array of image URLs to specify the **start frame** (1st element) and **end frame** (2nd element) of the video.
+- `[file]` (file, optional): Local image files uploaded via `multipart/form-data` (up to 2) to specify the **start frame** and **end frame**. The field name can be arbitrary, e.g., `image1`.
+- `response_format` (string, optional): Response format, supports `url` (default) or `b64_json`.
 
-> **图片输入说明**:
-> - 您可以通过 `file_paths` (URL数组) 或直接上传文件两种方式提供输入图片。
-> - 如果两种方式同时提供，系统将**优先使用本地上传的文件**。
-> - 最多支持2张图片，第1张作为视频首帧，第2张作为视频尾帧。
+> **Image Input Description**:
+> - You can provide input images via `file_paths` (URL array) or by directly uploading files.
+> - If both methods are provided, the system will **prioritize the locally uploaded files**.
+> - Up to 2 images are supported, the 1st as the start frame, the 2nd as the end frame.
 
-**支持的视频模型**:
-- `jimeng-video-3.0-pro` - 专业版
-- `jimeng-video-3.0` - 标准版
-- `jimeng-video-2.0-pro` - 专业版v2
-- `jimeng-video-2.0` - 标准版v2
+**Supported Video Models**:
+- `jimeng-video-3.0-pro` - Professional Edition
+- `jimeng-video-3.0` - Standard Edition
+- `jimeng-video-2.0-pro` - Professional Edition v2
+- `jimeng-video-2.0` - Standard Edition v2
 
-**使用示例**:
+**Usage Examples**:
 
 ```bash
-# 示例1: 纯文本生成视频 (使用 application/json)
+# Example 1: Pure text-to-video (using application/json)
 curl -X POST http://localhost:5100/v1/videos/generations \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_SESSION_ID" \
-  -d '{
-    "model": "jimeng-video-3.0",
-    "prompt": "一只奔跑在草原上的狮子"
-  }'
+  -d \
+    "{\"model\": \"jimeng-video-3.0\", \"prompt\": \"A lion running on the grassland\"}"
 
-# 示例2: 上传本地图片作为首帧生成视频 (使用 multipart/form-data)
+# Example 2: Upload local image as start frame for video generation (using multipart/form-data)
 curl -X POST http://localhost:5100/v1/videos/generations \
   -H "Authorization: Bearer YOUR_SESSION_ID" \
-  -F "prompt=一个男人在说话" \
+  -F "prompt=A man is talking" \
   -F "model=jimeng-video-3.0" \
   -F "image_file_1=@/path/to/your/local/image.png"
 
-# 示例3: 使用网络图片作为首帧生成视频 (使用 application/json)
+# Example 3: Use network image as start frame for video generation (using application/json)
 curl -X POST http://localhost:5100/v1/videos/generations \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_SESSION_ID" \
-  -d '{
-    "model": "jimeng-video-3.0",
-    "prompt": "一个女人在花园里跳舞",
-    "filePaths": ["https://example.com/your-network-image.jpg"]
-  }'
+  -d \
+    "{\"model\": \"jimeng-video-3.0\", \"prompt\": \"A woman dancing in a garden\", \"filePaths\": [\"https://example.com/your-network-image.jpg\"]}"
 
 ```
 
-### 聊天完成
+### Chat Completions
 
 **POST** `/v1/chat/completions`
 
@@ -396,20 +378,13 @@ curl -X POST http://localhost:5100/v1/videos/generations \
 curl -X POST http://localhost:5100/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_SESSION_ID" \
-  -d '{
-    "model": "jimeng-4.0",
-    "messages": [
-      {
-        "role": "user",
-        "content": "画一幅山水画"
-      }
-    ]
-  }'
+  -d \
+    "{\"model\": \"jimeng-4.0\", \"messages\": [ { \"role\": \"user\", \"content\": \"Draw a landscape painting\" } ]}"
 ```
 
-## 🔍 API响应格式
+## 🔍 API Response Format
 
-### 图像生成响应
+### Image Generation Response
 ```json
 {
   "created": 1759058768,
@@ -424,7 +399,7 @@ curl -X POST http://localhost:5100/v1/chat/completions \
 }
 ```
 
-### 聊天完成响应
+### Chat Completion Response
 ```json
 {
   "id": "chatcmpl-123",
@@ -449,112 +424,116 @@ curl -X POST http://localhost:5100/v1/chat/completions \
 }
 ```
 
-### 流式响应 (SSE)
+### Stream Response (SSE)
 ```
-data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1759058768,"model":"jimeng-4.0","choices":[{"index":0,"delta":{"role":"assistant","content":"🎨 图像生成中，请稍候..."},"finish_reason":null}]}
+data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1759058768,"model":"jimeng-4.0","choices":[{"index":0,"delta":{"role":"assistant","content":"🎨 Generating image, please wait..."},"finish_reason":null}]}
 
 data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1759058768,"model":"jimeng-4.0","choices":[{"index":1,"delta":{"role":"assistant","content":"![image](https://example.com/image.jpg)"},"finish_reason":"stop"}]}
 
 data: [DONE]
 ```
 
-## 🏗️ 项目架构
+## 🏗️ Project Architecture
 
 ```
 jimeng-api/
 ├── src/
 │   ├── api/
-│   │   ├── controllers/          # 控制器层
-│   │   │   ├── core.ts          # 核心功能（网络请求、文件处理）
-│   │   │   ├── images.ts        # 图像生成逻辑
-│   │   │   ├── videos.ts        # 视频生成逻辑
-│   │   │   └── chat.ts          # 聊天接口逻辑
-│   │   ├── routes/              # 路由定义
-│   │   └── consts/              # 常量定义
-│   │       ├── exceptions.ts    # 异常定义
-│   │       └── common.ts        # 通用常量
-│   ├── lib/                     # 核心库
-│   │   ├── server.ts           # 服务器核心
-│   │   ├── error-handler.ts    # 统一错误处理
-│   │   ├── smart-poller.ts     # 智能轮询器
-│   │   ├── aws-signature.ts    # AWS签名
-│   │   └── exceptions/         # 异常类
-│   ├── daemon.ts               # 守护进程
-│   └── index.ts               # 入口文件
-├── configs/                    # 配置文件
-├── Dockerfile                 # Docker配置
-└── package.json              # 项目配置
+│   │   ├── controllers/          # Controller layer
+│   │   │   ├── core.ts          # Core functions (network requests, file handling)
+│   │   │   ├── images.ts        # Image generation logic
+│   │   │   ├── videos.ts        # Video generation logic
+│   │   │   └── chat.ts          # Chat interface logic
+│   │   ├── routes/              # Route definitions
+│   │   └── consts/              # Constant definitions
+│   ├── lib/                     # Core library
+│   │   ├── configs/            # Configuration loading
+│   │   ├── consts/             # Constants
+│   │   ├── exceptions/         # Exception classes
+│   │   ├── interfaces/         # Interface definitions
+│   │   ├── request/            # Request handling
+│   │   ├── response/           # Response handling
+│   │   ├── config.ts           # Configuration center
+│   │   ├── server.ts           # Server core
+│   │   ├── logger.ts           # Logger
+│   │   ├── error-handler.ts    # Unified error handling
+│   │   ├── smart-poller.ts     # Smart poller
+│   │   └── aws-signature.ts    # AWS signature
+│   ├── daemon.ts               # Daemon process
+│   └── index.ts               # Entry file
+├── configs/                    # Configuration files
+├── Dockerfile                 # Docker configuration
+└── package.json              # Project configuration
 ```
 
-## 🔧 核心组件
+## 🔧 Core Components
 
-### 智能轮询器 (SmartPoller)
-- 基于状态码自适应调整轮询间隔
-- 多重退出条件，避免无效等待
-- 详细的进度跟踪和日志记录
+### SmartPoller
+- Adapts polling interval based on status codes.
+- Multiple exit conditions to avoid invalid waiting.
+- Detailed progress tracking and logging.
 
-### 统一错误处理 (ErrorHandler)
-- 分类错误处理（网络错误、API错误、超时等）
-- 自动重试机制
-- 用户友好的错误提示
+### Unified ErrorHandler
+- Categorized error handling (network errors, API errors, timeouts, etc.).
+- Automatic retry mechanism.
+- User-friendly error messages.
 
-### 安全JSON解析
-- 自动修复常见JSON格式问题
-- 支持尾随逗号、单引号等非标准格式
-- 详细的解析错误日志
+### Safe JSON Parsing
+- Automatically fixes common JSON format issues.
+- Supports trailing commas and single quotes.
+- Detailed parsing error logs.
 
+## ⚙️ Advanced Configuration
 
-## ⚙️ 高级配置
-
-### 轮询配置
+### Polling Configuration
 ```typescript
 export const POLLING_CONFIG = {
-  MAX_POLL_COUNT: 900,    // 最大轮询次数 (15分钟)
-  POLL_INTERVAL: 1000,    // 基础轮询间隔 (1秒)
-  STABLE_ROUNDS: 5,       // 稳定轮次
-  TIMEOUT_SECONDS: 900    // 超时时间 (15分钟)
+  MAX_POLL_COUNT: 900,    // Max polling attempts (15 minutes)
+  POLL_INTERVAL: 1000,    // Base polling interval (1 second)
+  STABLE_ROUNDS: 5,       // Stable rounds
+  TIMEOUT_SECONDS: 900    // Timeout (15 minutes)
 };
 ```
 
-### 重试配置
+### Retry Configuration
 ```typescript
 export const RETRY_CONFIG = {
-  MAX_RETRY_COUNT: 3,     // 最大重试次数
-  RETRY_DELAY: 5000       // 重试延迟 (5秒)
+  MAX_RETRY_COUNT: 3,     // Max retry attempts
+  RETRY_DELAY: 5000       // Retry delay (5 seconds)
 };
 ```
 
-## 🐛 故障排除
+## 🐛 Troubleshooting
 
-### 常见问题
+### Common Issues
 
-1. **JSON解析错误**
-   - 检查请求体格式是否正确
-   - 系统会自动修复常见格式问题
+1.  **JSON Parsing Error**
+    -   Check if the request body format is correct.
+    -   The system will automatically fix common format issues.
 
-2. **Sessionid失效**
-   - 重新获取对应站点的Sessionid
-   - 检查Sessionid格式是否正确
+2.  **Invalid `sessionid`**
+    -   Re-obtain the `sessionid` for the corresponding site.
+    -   Check if the `sessionid` format is correct.
 
-3. **生成超时**
-   - 图像生成：通常1-3分钟
-   - 视频生成：通常3-15分钟
-   - 系统会自动处理超时情况
+3.  **Generation Timeout**
+    -   Image generation: usually 1-3 minutes.
+    -   Video generation: usually 3-15 minutes.
+    -   The system will automatically handle timeouts.
 
-4. **积分不足**
-   - 前往即梦/dreamina官网查看积分余额
-   - 系统会提供详细的积分状态信息
+4.  **Insufficient Credits**
+    -   Go to the Jimeng/Dreamina official website to check your credit balance.
+    -   The system will provide detailed credit status information.
 
-## 🙏 致谢
+## 🙏 Acknowledgements
 
-本项目基于以下开源项目的贡献和启发：
+This project is based on the contributions and inspiration of the following open-source project:
 
-- **[jimeng-free-api-all](https://github.com/wwwzhouhui/jimeng-free-api-all)** - 感谢该项目为即梦API逆向工程提供的重要参考和技术基础，本项目在其基础上进行了功能完善和架构优化
+- **[jimeng-free-api-all](https://github.com/wwwzhouhui/jimeng-free-api-all)** - Thanks to this project for providing an important reference and technical basis for the reverse engineering of the Jimeng API. This project has improved its functionality and architecture based on it.
 
-## 📄 许可证
+## 📄 License
 
-GPL v3 License - 详见 [LICENSE](LICENSE) 文件
+GPL v3 License - see the [LICENSE](LICENSE) file for details.
 
-## ⚠️ 免责声明
+## ⚠️ Disclaimer
 
-本项目仅供学习和研究使用，请遵守相关服务条款和法律法规。使用本项目所产生的任何后果由使用者自行承担。
+This project is for learning and research purposes only. Please comply with relevant service terms and laws. Any consequences arising from the use of this project are the sole responsibility of the user.

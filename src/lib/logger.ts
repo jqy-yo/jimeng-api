@@ -100,13 +100,10 @@ class Logger {
     config = {};
     /** @type {Object} 日志级别映射 */
     static Level = {
-        Success: "success",
         Info: "info",
-        Log: "log",
         Debug: "debug",
         Warning: "warning",
         Error: "error",
-        Fatal: "fatal"
     };
     /** @type {Object} 日志级别文本颜色樱色 */
     static LevelColor = {
@@ -117,6 +114,15 @@ class Logger {
         [Logger.Level.Error]: "brightRed",
         [Logger.Level.Fatal]: "red"
     };
+    static LevelPriority = {
+        [Logger.Level.Fatal]: 1,
+        [Logger.Level.Error]: 2,
+        [Logger.Level.Warning]: 3,
+        [Logger.Level.Success]: 4,
+        [Logger.Level.Info]: 5,
+        [Logger.Level.Log]: 6,
+        [Logger.Level.Debug]: 7,
+    }
     #writer;
 
     constructor() {
@@ -132,46 +138,45 @@ class Logger {
         this.#writer.writeSync(Buffer.from(`\n\n===================== LOG END ${dateFormat(new Date(), "yyyy-MM-dd HH:mm:ss.SSS")} =====================\n\n`));
     }
 
+    #checkLevel(level) {
+        const currentLevelPriority = Logger.LevelPriority[config.system.log_level] || 99;
+        const levelPriority = Logger.LevelPriority[level];
+        return levelPriority <= currentLevelPriority;
+    }
+
     success(...params) {
+        if (!this.#checkLevel(Logger.Level.Success)) return;
         const content = new LogText(Logger.Level.Success, ...params).toString();
         console.info(content[Logger.LevelColor[Logger.Level.Success]]);
         this.#writer.push(content + "\n");
     }
 
     info(...params) {
+        if (!this.#checkLevel(Logger.Level.Info)) return;
         const content = new LogText(Logger.Level.Info, ...params).toString();
         console.info(content[Logger.LevelColor[Logger.Level.Info]]);
         this.#writer.push(content + "\n");
     }
 
-    log(...params) {
-        const content = new LogText(Logger.Level.Log, ...params).toString();
-        console.log(content[Logger.LevelColor[Logger.Level.Log]]);
-        this.#writer.push(content + "\n");
-    }
-
     debug(...params) {
         if(!config.system.debug) return;  //非调试模式忽略debug
+        if (!this.#checkLevel(Logger.Level.Debug)) return;
         const content = new LogText(Logger.Level.Debug, ...params).toString();
         console.debug(content[Logger.LevelColor[Logger.Level.Debug]]);
         this.#writer.push(content + "\n");
     }
 
     warn(...params) {
+        if (!this.#checkLevel(Logger.Level.Warning)) return;
         const content = new LogText(Logger.Level.Warning, ...params).toString();
         console.warn(content[Logger.LevelColor[Logger.Level.Warning]]);
         this.#writer.push(content + "\n");
     }
 
     error(...params) {
+        if (!this.#checkLevel(Logger.Level.Error)) return;
         const content = new LogText(Logger.Level.Error, ...params).toString();
         console.error(content[Logger.LevelColor[Logger.Level.Error]]);
-        this.#writer.push(content);
-    }
-
-    fatal(...params) {
-        const content = new LogText(Logger.Level.Fatal, ...params).toString();
-        console.error(content[Logger.LevelColor[Logger.Level.Fatal]]);
         this.#writer.push(content);
     }
 
