@@ -71,7 +71,7 @@ export async function acquireToken(refreshToken: string): Promise<string> {
 export function generateCookie(refreshToken: string) {
   const isUS = refreshToken.toLowerCase().startsWith('us-');
   const token = isUS ? refreshToken.substring(3) : refreshToken;
-  return [
+  const cookie = [
     `_tea_web_id=${WEB_ID}`,
     `is_staff_user=false`,
     `store-region=${isUS ? 'us' : 'cn-gd'}`,
@@ -81,9 +81,13 @@ export function generateCookie(refreshToken: string) {
     `uid_tt_ss=${USER_ID}`,
     `sid_tt=${token}`,
     `sessionid=${token}`,
-    `sessionid_ss=${token}`,
-    `sid_tt=${token}`
+    `sessionid_ss=${token}`
   ].join("; ");
+
+  // 调试日志
+  logger.info(`生成 Cookie (${isUS ? 'US' : 'CN'}): _tea_web_id=${WEB_ID}, uid_tt=${USER_ID.substring(0, 20)}..., sessionid=${token.substring(0, 20)}...`);
+
+  return cookie;
 }
 
 /**
