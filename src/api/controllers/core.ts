@@ -487,10 +487,20 @@ export async function acquireSessionId(authorization: string, model?: string): P
     }
   }
 
-  // 降级：从静态配置获取
-  const tokens = tokenSplit(authorization);
+  // 降级：从环境变量的静态配置获取
+  const sessionIds = process.env.JIMENG_SESSION_IDS;
+  if (!sessionIds) {
+    // 如果没有配置环境变量，尝试从 Authorization header 获取
+    const tokens = tokenSplit(authorization);
+    const token = _.sample(tokens) as string;
+    logger.info('使用 Authorization header 中的 SessionID');
+    return token;
+  }
+
+  // 从环境变量获取 SessionID 列表
+  const tokens = sessionIds.split(',').map(t => t.trim());
   const token = _.sample(tokens) as string;
-  logger.info('使用静态配置的 SessionID');
+  logger.info(`使用环境变量配置的 SessionID: ${token.substring(0, 20)}...`);
   return token;
 }
 
