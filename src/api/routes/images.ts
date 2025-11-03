@@ -3,7 +3,7 @@ import _ from "lodash";
 
 import Request from "@/lib/request/Request.ts";
 import { generateImages, generateImageComposition } from "@/api/controllers/images.ts";
-import { tokenSplit } from "@/api/controllers/core.ts";
+import { acquireSessionId } from "@/api/controllers/core.ts";
 import util from "@/lib/util.ts";
 
 export default {
@@ -29,8 +29,6 @@ export default {
         .validate("body.response_format", v => _.isUndefined(v) || _.isString(v))
         .validate("headers.authorization", _.isString);
 
-      const tokens = tokenSplit(request.headers.authorization);
-      const token = _.sample(tokens);
       const {
         model,
         prompt,
@@ -40,6 +38,9 @@ export default {
         sample_strength: sampleStrength,
         response_format,
       } = request.body;
+
+      // 获取 SessionID（优先从 Token Manager，否则从静态配置）
+      const token = await acquireSessionId(request.headers.authorization, model);
 
       const responseFormat = _.defaultTo(response_format, "url");
       const imageUrls = await generateImages(model, prompt, {
@@ -132,9 +133,6 @@ export default {
         images = bodyImages.map((image: any) => _.isString(image) ? image : image.url);
       }
 
-      const tokens = tokenSplit(request.headers.authorization);
-      const token = _.sample(tokens);
-      
       const {
         model,
         prompt,
@@ -144,6 +142,9 @@ export default {
         sample_strength: sampleStrength,
         response_format,
       } = request.body;
+
+      // 获取 SessionID（优先从 Token Manager，否则从静态配置）
+      const token = await acquireSessionId(request.headers.authorization, model);
 
       const responseFormat = _.defaultTo(response_format, "url");
       const resultUrls = await generateImageComposition(model, prompt, images, {

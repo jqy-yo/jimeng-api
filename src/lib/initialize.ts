@@ -1,4 +1,17 @@
 import logger from './logger.js';
+import { initTokenManagerClient } from './token-manager-client.ts';
+
+// 初始化 Token Manager 客户端
+const tokenManagerEnabled = process.env.TOKEN_MANAGER_ENABLED === 'true';
+const tokenManagerUrl = process.env.TOKEN_MANAGER_URL;
+const tokenManagerApiKey = process.env.TOKEN_MANAGER_API_KEY;
+
+if (tokenManagerEnabled) {
+  initTokenManagerClient(tokenManagerUrl, tokenManagerApiKey);
+  logger.info('Token Manager 已启用');
+} else {
+  logger.info('Token Manager 未启用，使用静态 SessionID 模式');
+}
 
 // 允许无限量的监听器
 process.setMaxListeners(Infinity);

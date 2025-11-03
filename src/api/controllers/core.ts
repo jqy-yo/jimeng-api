@@ -452,6 +452,45 @@ export function tokenSplit(authorization: string) {
 }
 
 /**
+ * 获取 SessionID
+ * 优先从 Token Manager 获取，如果未启用则从静态配置获取
+ *
+ * @param authorization 认证字符串
+ * @param model 模型名称（用于判断是否为国际版）
+ * @returns SessionID
+ */
+export async function acquireSessionId(authorization: string, model?: string): Promise<string> {
+  const { getTokenManagerClient } = await import('@/lib/token-manager-client.ts');
+  const tokenManager = getTokenManagerClient();
+
+  // 判断是否为国际版（model 包含 'dreamina' 或 authorization 包含 'us-'）
+  const isUS = (model && model.toLowerCase().includes('dreamina')) ||
+               authorization.toLowerCase().includes('us-');
+
+  // 如果启用了 Token Manager，从 Token Manager 获取
+  if (tokenManager && tokenManager.isEnabled()) {
+    try {
+      const sessionInfo = await tokenManager.acquireSessionId(isUS);
+      if (sessionInfo) {
+        const sessionId = isUS ? `us-${sessionInfo.sessionId}` : sessionInfo.sessionId;
+        logger.info(`从 Token Manager 获取 SessionID: ${sessionInfo.email}`);
+        return sessionId;
+      } else {
+        logger.warn('Token Manager 返回空值，降级使用静态配置');
+      }
+    } catch (error: any) {
+      logger.error(`Token Manager 获取失败: ${error.message}，降级使用静态配置`);
+    }
+  }
+
+  // 降级：从静态配置获取
+  const tokens = tokenSplit(authorization);
+  const token = _.sample(tokens) as string;
+  logger.info('使用静态配置的 SessionID');
+  return token;
+}
+
+/**
  * 获取Token存活状态
  */
 export async function getTokenLiveStatus(refreshToken: string) {

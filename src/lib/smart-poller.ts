@@ -127,8 +127,8 @@ export class SmartPoller {
       return { shouldExit: true, reason: `已获得完整结果集(${itemCount}/${this.options.expectedItemCount})` };
     }
     
-    // 4. 图片数量已稳定
-    if (this.stableItemCountRounds >= this.options.stableRounds && itemCount > 0) {
+    // 4. 图片数量已稳定（只有达到期望数量后才能因稳定退出）
+    if (this.stableItemCountRounds >= this.options.stableRounds && itemCount > 0 && itemCount >= this.options.expectedItemCount) {
       return { shouldExit: true, reason: `结果数量稳定(${this.stableItemCountRounds}轮)` };
     }
     
