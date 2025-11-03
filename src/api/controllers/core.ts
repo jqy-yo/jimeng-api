@@ -27,10 +27,10 @@ import {
 const MODEL_NAME = "jimeng";
 // 设备ID
 const DEVICE_ID = Math.random() * 999999999999999999 + 7000000000000000000;
-// WebID
-const WEB_ID = Math.random() * 999999999999999999 + 7000000000000000000;
-// 用户ID
-const USER_ID = util.uuid(false);
+// WebID - 优先使用环境变量，否则随机生成
+const WEB_ID = process.env.DREAMINA_WEB_ID || (Math.random() * 999999999999999999 + 7000000000000000000).toString();
+// 用户ID - 优先使用环境变量，否则随机生成
+const USER_ID = process.env.DREAMINA_UID_TT || util.uuid(false);
 // 伪装headers
 const FAKE_HEADERS = {
   Accept: "application/json, text/plain, */*",
